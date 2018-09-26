@@ -8,7 +8,6 @@ using MonoGame.Extended.ViewportAdapters;
 using System.Collections;
 
 
-
 namespace wk_3_project
 {
 	/// <summary>
@@ -19,14 +18,14 @@ namespace wk_3_project
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
 
-		Class2 player = new Class2();
+		player player = new player();
 
 		Camera2D camera = null;
 		TiledMap map = null;
 		TiledMapRenderer mapRenderer = null;
 		TiledMapTileLayer collisionLayer;
 		public ArrayList allCollisionTiles = new ArrayList();
-		public Class1[,] levelGrid;
+		public sprite[,] levelGrid;
 
 		public int tileHeight = 0;
 		public int levelTileWidth = 0;
@@ -63,6 +62,7 @@ namespace wk_3_project
 			map = Content.Load<TiledMap>("level1");
 			mapRenderer = new TiledMapRenderer(GraphicsDevice);
 
+			SetUpTiles();
 		}
 
 		
@@ -91,7 +91,7 @@ namespace wk_3_project
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(Color.CornflowerBlue);
+			GraphicsDevice.Clear(Color.Black);
 
 			var viewMatrix = camera.GetViewMatrix();
 			var projectionMatrix = Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0f, -1f);
@@ -110,16 +110,48 @@ namespace wk_3_project
 			tileHeight = map.TileHeight;
 			levelTileHeight = map.Height;
 			levelTileWidth = map.Width;
-			levelGrid = new Class1[levelTileWidth, levelTileHeight];
+			levelGrid = new sprite[levelTileWidth, levelTileHeight];
 
 			foreach (TiledMapTileLayer layer in map.TileLayers)
 			{
-				if (layer.Name == "Collide")
+				if (layer.Name == "collide")
 				{
 					collisionLayer = layer;
 				}
 				
 			}
+
+			int columns = 0;
+			int rows = 0;
+			int loopCount = 0;
+
+			while(loopCount < collisionLayer.Tiles.Count)
+			{
+				if (collisionLayer.Tiles[loopCount].GlobalIdentifier != 0)
+				{
+					sprite tileSprite = new sprite();
+					tileSprite.position.X = columns * tileHeight;
+					tileSprite.position.Y = rows * tileHeight;
+					tileSprite.width = tileHeight;
+					tileSprite.height = tileHeight;
+					tileSprite.UpdateHitBox();
+					allCollisionTiles.Add(tileSprite);
+					levelGrid[columns, rows] = tileSprite;
+
+				}
+
+				columns++;
+
+				if(columns == levelTileWidth)
+				{
+					columns = 0;
+					rows++;
+				}
+
+				loopCount++;
+					
+			}
+
 		}
 	}
 }

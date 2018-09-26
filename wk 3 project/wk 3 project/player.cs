@@ -11,21 +11,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace wk_3_project
 {
-	class Class2
+	class player
 	{
-		public Class1 playerSprite = new Class1();
+		public sprite playerSprite = new sprite();
 
 		Game1 game = null;
 		float runSpeed = 15000f;
 
-		public Class2()
+		Collision collision = new Collision();
+
+
+		public player()
 		{
 
 		}
 
 		public void Load( ContentManager content, Game1 theGame)
 		{
-			playerSprite.Load(content, "hero");
+			playerSprite.Load(content, "hero", false);
 			game = theGame;
 			playerSprite.velocity = Vector2.Zero;
 			playerSprite.position = new Vector2(theGame.GraphicsDevice.Viewport.Width / 2, 0);
@@ -51,7 +54,6 @@ namespace wk_3_project
 			{
 				localAcceleration.X = -runSpeed;
 			}
-
 			if (Keyboard.GetState().IsKeyDown(Keys.Right) == true)
 			{
 				localAcceleration.X = runSpeed;
@@ -60,13 +62,24 @@ namespace wk_3_project
 			{
 				localAcceleration.Y = -runSpeed;
 			}
-
 			if (Keyboard.GetState().IsKeyDown(Keys.Down) == true)
 			{
 				localAcceleration.Y = runSpeed;
 			}
+
+
+
 			playerSprite.velocity = localAcceleration * deltaTime;
 			playerSprite.position += playerSprite.velocity * deltaTime;
+
+			collision.game = game;
+			playerSprite = collision.CollideWithPlatforms(playerSprite, deltaTime);
 		}
 	}
+
+	
+
+
+
+	
 }
