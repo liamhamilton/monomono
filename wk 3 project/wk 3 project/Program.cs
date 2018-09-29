@@ -14,7 +14,7 @@ namespace wk_3_project
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new MonoGame.Game1())
                 game.Run();
         }
     }

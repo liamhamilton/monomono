@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wk 3 project", "wk 3 project.csproj", "{F99F9617-4DBD-4DFE-B326-E84E1148AB69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGame", "wk 3 project\MonoGame.csproj", "{F99F9617-4DBD-4DFE-B326-E84E1148AB69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {330708C4-07F3-4DE4-AF55-710F856E4594}
+		SolutionGuid = {64695164-5EAE-40D9-8343-2DB51A78E089}
 	EndGlobalSection
 EndGlobal

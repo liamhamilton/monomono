@@ -8,7 +8,7 @@ using MonoGame.Extended.ViewportAdapters;
 using System.Collections;
 
 
-namespace wk_3_project
+namespace MonoGame
 {
 	/// <summary>
 	/// This is the main type for your game.
