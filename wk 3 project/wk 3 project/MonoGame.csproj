@@ -42,6 +42,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AnimatedTexture.cs" />
+    <Compile Include="chest.cs" />
+    <Compile Include="Enemy.cs" />
     <Compile Include="sprite.cs" />
     <Compile Include="player.cs" />
     <Compile Include="Content\Collision.cs" />

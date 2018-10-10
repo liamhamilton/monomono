@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 
 
 namespace MonoGame      
@@ -16,9 +17,15 @@ namespace MonoGame
 		public sprite playerSprite = new sprite();
 
 		Game1 game = null;
-		float runSpeed = 15000f;
+		float runSpeed = 250f;
+		float maxRunSpeed = 500f;
+		float friction = 500f;
+		float terminalVelocity = 500f;
+		public float jumpStrenght = 50000f;
 
 		Collision collision = new Collision();
+		SoundEffect jumpSound;
+		SoundEffectInstance jumpSoundInstance;
 
 
 		public player()
@@ -36,6 +43,10 @@ namespace MonoGame
 			playerSprite.AddAnimation(animation, 0, 0);
 			playerSprite.Pause();
 
+			jumpSound = content.Load<SoundEffect>("Jump");
+			jumpSoundInstance = jumpSound.CreateInstance();
+
+				
 			//playerSprite.offset = new Vector2(24, 24);
 
 			game = theGame;
@@ -57,44 +68,61 @@ namespace MonoGame
 
 		private void UpdateInput (float deltaTime)
 		{
-			Vector2 localAcceleration = new Vector2(0, 0);
+			bool wasMovingLeft = playerSprite.velocity.X < 0;
+			bool wasMovingRight = playerSprite.velocity.X > 0;
+
+			Vector2 localAcceleration = game.gravity;
 
 			if (Keyboard.GetState().IsKeyDown(Keys.Left) == true)
 			{
-				localAcceleration.X = -runSpeed;
+				localAcceleration.X += -runSpeed;
 				playerSprite.SetFlipped(true);
 				playerSprite.Play();
 			}
+			else if (wasMovingLeft == true)
+			{
+				localAcceleration.X += friction;
+				playerSprite.Pause();
+			}
+
 			if (Keyboard.GetState().IsKeyDown(Keys.Right) == true)
 			{
-				localAcceleration.X = runSpeed;
+				localAcceleration.X +=runSpeed;
 				playerSprite.SetFlipped(false);
 				playerSprite.Play();
 			}
-			if (Keyboard.GetState().IsKeyDown(Keys.Up) == true)
+			else if (wasMovingRight == true)
 			{
-				localAcceleration.Y = -runSpeed;
+				localAcceleration.X += -friction;
+				playerSprite.Pause();
 			}
-			if (Keyboard.GetState().IsKeyDown(Keys.Down) == true)
-			{
-				localAcceleration.Y = runSpeed;
-			}
+			
 			if (Keyboard.GetState().IsKeyUp(Keys.Left) == true && Keyboard.GetState().IsKeyUp(Keys.Right) == true)
 			{
 				playerSprite.Pause();
 			}
 
-			playerSprite.velocity = localAcceleration * deltaTime;
+			if (Keyboard.GetState().IsKeyDown(Keys.Space) == true)
+			{
+				jumpSoundInstance.Play();
+			}
+
+			playerSprite.velocity+=localAcceleration * deltaTime;
+
+			if (playerSprite.velocity.X > maxRunSpeed)
+			{
+				playerSprite.velocity.X = maxRunSpeed;
+			}
+			else if (playerSprite.velocity.X = -maxRunSpeed)
+			{
+				playerSprite.velocity.X = -maxRunSpeed;
+			}
+
 			playerSprite.position += playerSprite.velocity * deltaTime;
 
 			collision.game = game;
 			playerSprite = collision.CollideWithPlatforms(playerSprite, deltaTime);
 		}
 	}
-
-	
-
-
-
 	
 }

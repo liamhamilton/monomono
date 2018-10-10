@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
+
 namespace MonoGame
 {
 	class Collision
@@ -103,8 +104,8 @@ namespace MonoGame
 			{
 				hero = CollideAboveDiagonals(hero, topRightTile, playerPrediction);
 			}
-			return hero;
 
+			return hero;
 		}
 
 		bool CheckForTile(Game1 game, Vector2 coordinates)
@@ -171,7 +172,7 @@ namespace MonoGame
 		{
 			sprite tile = game.levelGrid[(int)tileIndex.X, (int)tileIndex.Y];
 
-			if (IsColliding(playerPrediction, tile) == true && hero.velocity.X > 0)
+			if (IsColliding(playerPrediction, tile) == true && hero.velocity.Y > 0)
 			{
 				hero.position.Y = tile.topEdge - hero.height + hero.offset.Y;
 				hero.velocity.Y = 0;
@@ -186,7 +187,7 @@ namespace MonoGame
 
 			int leftEdgeDistance = Math.Abs(tile.leftEdge - playerPrediction.rightEdge);
 			int rightEdgeDistance = Math.Abs(tile.rightEdge - playerPrediction.leftEdge);
-			int topEdgeDistance = Math.Abs(tile.rightEdge - playerPrediction.bottomEdge);
+			int topEdgeDistance = Math.Abs(tile.topEdge - playerPrediction.bottomEdge);
 
 			if (IsColliding(playerPrediction, tile) == true)
 			{
@@ -198,42 +199,44 @@ namespace MonoGame
 				else if (rightEdgeDistance < leftEdgeDistance)
 				{
 					hero.position.X = tile.rightEdge + hero.offset.X;
-					hero.velocity.X = 0;
+					
 				}
 				else
 				{
-					hero.position.X = tile.leftEdge  + hero.offset.X;
-					hero.velocity.X = 0;
+					hero.position.X = tile.leftEdge - hero.width  + hero.offset.X;
+					
 				}
 			}
 			return hero;
+
+
 		}
 
 		sprite CollideAboveDiagonals(sprite hero, Vector2 tileIndex, sprite playerPrediction)
 		{
 			sprite tile = game.levelGrid[(int)tileIndex.X, (int)tileIndex.Y];
-
+			
 			int leftEdgeDistance = Math.Abs(tile.rightEdge - playerPrediction.leftEdge);
-			int rightEdgeDistance = Math.Abs(tile.rightEdge - playerPrediction.rightEdge);
-			int bottomEdgeDistance = Math.Abs(tile.rightEdge - playerPrediction.topEdge);
+			int rightEdgeDistance = Math.Abs(tile.leftEdge - playerPrediction.rightEdge);
+			int bottomEdgeDistance = Math.Abs(tile.bottomEdge - playerPrediction.topEdge);
 
 			if (IsColliding(playerPrediction, tile) == true)
 			{
 				if (bottomEdgeDistance < leftEdgeDistance && bottomEdgeDistance < rightEdgeDistance)
 				{
 					hero.position.Y = tile.bottomEdge + hero.offset.Y;
-					hero.velocity.Y = 0;
+					
 				}
 
 				else if (leftEdgeDistance < rightEdgeDistance)
 				{
 					hero.position.X = tile.rightEdge + hero.offset.X;
-					hero.velocity.X = 0;
+					
 				}
 				else
 				{
 					hero.position.X = tile.leftEdge + hero.offset.X;
-					hero.velocity.X = 0;
+					
 				}
 
 			}
