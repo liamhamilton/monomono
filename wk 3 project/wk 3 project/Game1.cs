@@ -23,8 +23,11 @@ namespace MonoGame
 
 		player player = new player();
 
-		List<Enemy> enemies = new List<Enemy>();
+		public List<Enemy> enemies = new List<Enemy>();
+		public List<collect> collectables = new List<collect>();
 		public chest goal = null;
+		public sprite currentCheckpoint = null;
+	
 
 		Camera2D camera = null;
 		TiledMap map = null;
@@ -42,8 +45,8 @@ namespace MonoGame
 		Song gameMusic;
 
 		SpriteFont arialFont;
-		int score = 0;
-		int lives = 3;
+		public int score = 0;
+		public int lives = 3;
 		Texture2D heart  = null;
 
 		public Game1()
@@ -66,6 +69,9 @@ namespace MonoGame
 			
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
+			SetUpTiles();
+			LoadObjects();
+
 			player.Load(Content, this);
 
 			arialFont = Content.Load<SpriteFont>("Arial");
@@ -83,8 +89,7 @@ namespace MonoGame
 			gameMusic = Content.Load<Song>("SuperHero_original_no_Intro");
 			MediaPlayer.Play(gameMusic);
 
-			SetUpTiles();
-			LoadObjects();
+			
 		}
 
 		
@@ -107,6 +112,12 @@ namespace MonoGame
 				enemy.Update(deltaTime);
 			}
 
+			foreach (collect collect in collectables)
+			{
+				collect.Update(deltaTime);
+			}
+			goal.Update(deltaTime);
+
 			camera.Position = player.playerSprite.position - new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, graphics.GraphicsDevice.Viewport.Height / 2);
 
 			base.Update(gameTime);
@@ -127,13 +138,19 @@ namespace MonoGame
 
 			mapRenderer.Draw(map, ref viewMatrix, ref projectionMatrix);
 			player.Draw(spriteBatch);
+			goal.Draw(spriteBatch);
 
 			foreach (Enemy enemy in enemies)
 			{
 				enemy.Draw(spriteBatch);
 			}
 
-			goal.Draw(spriteBatch);
+			foreach (collect collect in collectables)
+			{
+				collect.Draw(spriteBatch);
+			}
+
+
 			spriteBatch.End();
 
 			spriteBatch.Begin();
@@ -153,9 +170,7 @@ namespace MonoGame
 
 		public void SetUpTiles()
 		{
-			tileHeight = map.TileHeight;
-			levelTileHeight = map.Height;
-			levelTileWidth = map.Width;
+			
 			levelGrid = new sprite[levelTileWidth, levelTileHeight];
 
 			foreach (TiledMapTileLayer layer in map.TileLayers)
@@ -204,6 +219,21 @@ namespace MonoGame
 		{
          foreach(TiledMapObjectLayer layer in map.ObjectLayers)
 			{
+
+				if(layer.Name == "respawn")
+				{
+					TiledMapObject thing = layer.Objects[0];
+					if (thing != null)
+					{
+						sprite respawn = new sprite();
+						respawn.position = new Vector2(thing.Position.X, thing.Position.Y);
+						currentCheckpoint = respawn;
+
+					}
+
+					
+						
+				}
 				if (layer.Name == "Enemies")
 				{
 					foreach(TiledMapObject thing in layer.Objects)
@@ -227,6 +257,20 @@ namespace MonoGame
 						goal = chest;
 					}
 ;
+				}
+
+				if (layer.Name == "Collectable")
+				{
+
+					foreach (TiledMapObject thing in layer.Objects)
+					{
+						collect collect = new collect();
+						Vector2 tiles = new Vector2((int)(thing.Position.X / tileHeight), (int)(thing.Position.Y / tileHeight));
+						collect.collectSprite.position = tiles * tileHeight;
+						collect.Load(Content, this);
+						collectables.Add(collect);
+					}
+
 				}
 			}
 		}

@@ -9,9 +9,9 @@ using Microsoft.Xna.Framework;
 
 namespace MonoGame
 {
-	public class chest
+	public class collect
 	{
-		public sprite chestSprite = new sprite();
+		public sprite collectSprite = new sprite();
 		Collision collision = new Collision();
 		Game1 game = null;
 
@@ -20,20 +20,19 @@ namespace MonoGame
 			game = theGame;
 
 			AnimatedTexture animation = new AnimatedTexture(Vector2.Zero, 0, 1, 1);
-			animation.Load(content, "chest", 1, 1);
+			animation.Load(content, "collect", 1, 1);
 
-			chestSprite.AddAnimation(animation, 0, 3);
+			collectSprite.AddAnimation(animation, 0, 3);
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			chestSprite.Draw(spriteBatch);
+			collectSprite.Draw(spriteBatch);
 		}
 		public void Update(float deltaTime)
 		{
 			collision.game = game;
-			chestSprite.UpdateHitBox();
+			collectSprite.UpdateHitBox();
 		}
-
 	}
 }

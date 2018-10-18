@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 
 namespace MonoGame
 {
-	class Enemy
+	public class Enemy
 	{
 		float walkSpeed = 7500f;
 		public sprite enemySprite = new sprite();
@@ -50,6 +50,8 @@ namespace MonoGame
 		{
 			enemySprite.Draw(spriteBatch);
 		}
+
+		
 
 	}
 }

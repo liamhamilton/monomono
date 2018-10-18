@@ -43,13 +43,17 @@
   <ItemGroup>
     <Compile Include="AnimatedTexture.cs" />
     <Compile Include="chest.cs" />
+    <Compile Include="collect.cs" />
     <Compile Include="Enemy.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="ParticleSystem.cs" />
     <Compile Include="sprite.cs" />
     <Compile Include="player.cs" />
     <Compile Include="Content\Collision.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StateManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Extended, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace MonoGame      
 {
-	class player
+	public class player
 	{
 		public sprite playerSprite = new sprite();
 
@@ -21,7 +21,7 @@ namespace MonoGame
 		float maxRunSpeed = 500f;
 		float friction = 500f;
 		float terminalVelocity = 500f;
-		public float jumpStrenght = 50000f;
+		public float jumpStrength = 50000f;
 
 		Collision collision = new Collision();
 		SoundEffect jumpSound;
@@ -51,7 +51,7 @@ namespace MonoGame
 
 			game = theGame;
 			playerSprite.velocity = Vector2.Zero;
-			playerSprite.position = new Vector2(theGame.GraphicsDevice.Viewport.Width / 2, 0);
+			//playerSprite.position = new Vector2(theGame.GraphicsDevice.Viewport.Width / 2, 0);
 		}
 
 		public void Update (float deltaTime)
@@ -59,6 +59,22 @@ namespace MonoGame
 			UpdateInput(deltaTime);
 			playerSprite.Update(deltaTime);
 			playerSprite.UpdateHitBox();
+
+			if(collision.IsColliding(playerSprite, game.goal.chestSprite))
+			{
+				game.Exit();
+
+			}
+
+			for (int i = 0; i < game.enemies.Count; i++)
+			{
+				playerSprite = collision.CollideWithMonster(this, game.enemies[i], deltaTime, game);
+			}
+
+			for (int i = 0; i < game.collectables.Count; i++)
+			{
+				playerSprite = collision.CollideWithCollect(this, game.collectables[i], deltaTime, game);
+			}
 		}
 
 		public void Draw (SpriteBatch spriteBatch)
@@ -102,26 +118,56 @@ namespace MonoGame
 				playerSprite.Pause();
 			}
 
-			if (Keyboard.GetState().IsKeyDown(Keys.Space) == true)
+			if (Keyboard.GetState().IsKeyDown(Keys.Space) == true && playerSprite.canJump == true)
 			{
+				playerSprite.canJump = false;
+				localAcceleration.Y -= jumpStrength;
 				jumpSoundInstance.Play();
+				
 			}
 
-			playerSprite.velocity+=localAcceleration * deltaTime;
+			playerSprite.velocity += localAcceleration * deltaTime;
 
 			if (playerSprite.velocity.X > maxRunSpeed)
 			{
 				playerSprite.velocity.X = maxRunSpeed;
 			}
-			else if (playerSprite.velocity.X = -maxRunSpeed)
+			else if (playerSprite.velocity.X < -maxRunSpeed)
 			{
 				playerSprite.velocity.X = -maxRunSpeed;
+			}
+
+			if (wasMovingLeft && ( playerSprite.velocity.X > 0) || wasMovingRight &&(playerSprite.velocity.X < 0))
+			{
+				playerSprite.velocity.X = 0;
+			}
+
+			if(playerSprite.velocity.Y > terminalVelocity)
+			{
+				playerSprite.velocity.Y = terminalVelocity;
 			}
 
 			playerSprite.position += playerSprite.velocity * deltaTime;
 
 			collision.game = game;
 			playerSprite = collision.CollideWithPlatforms(playerSprite, deltaTime);
+
+			
+		}
+
+		public void KillPlayer()
+		{
+			playerSprite.position = game.currentCheckpoint.position;
+			if (game.lives > 0)
+			{
+				game.lives -= 1;
+			}
+
+			else
+			{
+				game.Exit();
+			}
+
 		}
 	}
 	

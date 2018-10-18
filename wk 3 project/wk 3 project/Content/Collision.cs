@@ -176,6 +176,7 @@ namespace MonoGame
 			{
 				hero.position.Y = tile.topEdge - hero.height + hero.offset.Y;
 				hero.velocity.Y = 0;
+				hero.canJump = true;
 			}
 
 			return hero;
@@ -195,6 +196,7 @@ namespace MonoGame
 				{
 					hero.position.Y = tile.topEdge - hero.height + hero.offset.Y;
 					hero.velocity.Y = 0;
+					hero.canJump = true;
 				}
 				else if (rightEdgeDistance < leftEdgeDistance)
 				{
@@ -242,6 +244,57 @@ namespace MonoGame
 			}
 			return hero;
 
+		}
+
+		public sprite CollideWithMonster (player hero, Enemy monster, float deltaTime, Game1 theGame)
+		{
+			sprite playerPrediction = new sprite();
+			playerPrediction.position = hero.playerSprite.position;
+			playerPrediction.width = hero.playerSprite.width;
+			playerPrediction.height = hero.playerSprite.height;
+			playerPrediction.offset = hero.playerSprite.offset;
+			playerPrediction.UpdateHitBox();
+
+			playerPrediction.position += hero.playerSprite.velocity * deltaTime;
+			if (IsColliding(playerPrediction, monster.enemySprite))
+			{
+				int leftEdgeDistance = Math.Abs(monster.enemySprite.leftEdge - playerPrediction.rightEdge);
+				int rightEdgeDistance = Math.Abs(monster.enemySprite.rightEdge - playerPrediction.leftEdge);
+				int topEdgeDistance = Math.Abs(monster.enemySprite.topEdge - playerPrediction.bottomEdge);
+				int bottomEdgeDistance = Math.Abs(monster.enemySprite.bottomEdge - playerPrediction.topEdge);
+
+				if(topEdgeDistance < leftEdgeDistance & topEdgeDistance < rightEdgeDistance && topEdgeDistance < bottomEdgeDistance)
+				{
+					theGame.enemies.Remove(monster);
+					hero.playerSprite.velocity.Y -= hero.jumpStrength * deltaTime;
+					hero.playerSprite.canJump = false;
+				}
+				else
+				{
+					hero.KillPlayer();
+					//theGame.Exit();
+				}
+
+			}
+			return hero.playerSprite;
+		}
+		public sprite CollideWithCollect(player hero, collect collect, float deltaTime, Game1 theGame)
+		{
+			sprite playerPrediction = new sprite();
+			playerPrediction.position = hero.playerSprite.position;
+			playerPrediction.width = hero.playerSprite.width;
+			playerPrediction.height = hero.playerSprite.height;
+			playerPrediction.offset = hero.playerSprite.offset;
+			playerPrediction.UpdateHitBox();
+
+			playerPrediction.position += hero.playerSprite.velocity * deltaTime;
+			if (IsColliding(playerPrediction, collect.collectSprite))
+			{
+				theGame.collectables.Remove(collect);
+				theGame.score += 10;
+
+			}
+			return hero.playerSprite;
 		}
 	}
 }
