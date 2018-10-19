@@ -69,6 +69,9 @@ namespace MonoGame
 			
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
+				map = Content.Load<TiledMap>("level1");
+			mapRenderer = new TiledMapRenderer(GraphicsDevice);
+
 			SetUpTiles();
 			LoadObjects();
 
