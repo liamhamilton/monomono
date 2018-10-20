@@ -86,9 +86,7 @@ namespace MonoGame
 
 			camera.Position = new Vector2(0, graphics.GraphicsDevice.Viewport.Height);
 
-			map = Content.Load<TiledMap>("level1");
-			mapRenderer = new TiledMapRenderer(GraphicsDevice);
-
+			
 			gameMusic = Content.Load<Song>("SuperHero_original_no_Intro");
 			MediaPlayer.Play(gameMusic);
 
@@ -201,12 +199,11 @@ namespace MonoGame
 					tileSprite.UpdateHitBox();
 					allCollisionTiles.Add(tileSprite);
 					levelGrid[columns, rows] = tileSprite;
-
 				}
 
 				columns++;
 
-				if(columns == levelTileWidth)
+				if (columns == levelTileWidth)
 				{
 					columns = 0;
 					rows++;
