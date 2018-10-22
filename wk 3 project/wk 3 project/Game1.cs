@@ -171,6 +171,9 @@ namespace MonoGame
 
 		public void SetUpTiles()
 		{
+			tileHeight = map.TileHeight;
+			levelTileHeight = map.Height;
+			levelTileWidth = map.Width;
 			
 			levelGrid = new sprite[levelTileWidth, levelTileHeight];
 

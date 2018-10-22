@@ -272,7 +272,7 @@ namespace MonoGame
 				else
 				{
 					hero.KillPlayer();
-					//theGame.Exit();
+					
 				}
 
 			}
